@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+    Gta\AdminBundle\Controller\:
+        resource: '../../Controller/*'
+        tags: ['controller.service_arguments']
+    Gta\AdminBundle\EventSubscriber\:
+        resource: '../../EventSubscriber/*'

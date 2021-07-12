@@ -1,0 +1,8 @@
+gta_admin_controllers:
+    resource: '@GtaAdminBundle/Controller'
+    type:     annotation
+    prefix:   /admin
+
+
+
+
