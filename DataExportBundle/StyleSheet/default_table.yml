@@ -1,0 +1,29 @@
+extends:
+    - import/colors.yml
+style:
+    default:
+        fontName: Arial
+        fontSize: 12
+    odd:
+        bgColor: &lightgray
+    header:
+        fontSize: 10
+        fontColor: &black
+        bgColor: &gray
+        borderBottom:
+            $width: 1
+            $color: &black
+        rowHeight:
+            $rowIndex: 1
+            $height: 20
+        alignHorizontal: center
+        alignVertical: center
+    body:
+        alignHorizontal: left
+        fontSize: 10
+        fontColor: 000000
+        bgColor: FFFFFF
+        borderVertical: { $width: 1, $color: &darkgray }
+        borderHorizontal: { $width: 1, $color: &darkgray }
+        borderRight: { $width: 1, $color: &gray }
+        borderLeft: { $width: 1, $color: &gray }

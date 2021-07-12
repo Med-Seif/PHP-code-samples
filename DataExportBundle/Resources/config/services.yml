@@ -1,0 +1,91 @@
+parameters:
+    default_export_adapter: Gta\DataExportBundle\Adapters\PhpSpreadsheet\PhpSpreadsheetAdapter
+    query_type_param_name: export
+    query_format_param_name: format
+    fname: fileName(screenTitle)
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    Gta\DataExportBundle\Adapters\ExportAdapterInterface:
+        public: false
+        alias: gta_data_export.export_adapter
+
+    gta_data_export.export_adapter:
+        class: '%default_export_adapter%'
+
+    gta_data_export.xlsx_export_adapter:
+        alias: gta_data_export.export_adapter
+        arguments:
+            - !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::FORMAT_XLSX
+
+    gta_data_export.pdf_export_adapter:
+        alias: gta_data_export.export_adapter
+        arguments:
+            - !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::FORMAT_PDF
+
+    gta_data_export.csv_export_adapter:
+        alias: gta_data_export.export_adapter
+        arguments:
+            - !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::FORMAT_CSV
+
+
+    # Event Listener
+    # Simple list export event listener
+    Gta\DataExportBundle\Event\Listener\ListeExportDataResponseListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, priority: 100, method: onKernelResponse }
+            - { name: is_export_listener }
+
+    # Tableau de service export event listener
+    Gta\DataExportBundle\Event\Listener\TsExportResponseListener:
+        arguments:
+            - '%fname%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response ,  priority: 99 , method: onKernelResponse}
+            - { name: is_export_listener }
+
+    Gta\DataExportBundle\Event\Listener\TsExportDataSourceStrategyInterface:
+        class: Gta\DataExportBundle\Event\Listener\TsExportDataSourceHttpResponseStrategy
+
+    Gta\DataExportBundle\Factory\TemplateFactory:
+        arguments:
+            - '%fname%'
+
+    Gta\DataExportBundle\Configurator\TemplateConfigurator: ~
+    Gta\DataExportBundle\Configurator\TsTemplateConfigurator: ~
+    # Manager
+    Gta\DataExportBundle\Manager\TsExportDirector: ~
+    Gta\DataExportBundle\Manager\SpreadSheetManager: ~
+    Gta\DataExportBundle\Strategy\TsModelStrategy: ~
+
+    # Builder
+    Gta\DataExportBundle\Builder\TsCollectifBuilder:
+        class: Gta\DataExportBundle\Builder\TsCollectifBuilder
+        tags:
+            - { name: is_logger, channel: export }
+
+    # Planning section
+    # Models
+    Gta\DataExportBundle\Planning\Model\DateHorIntervenantModel:
+        tags: ['data_export.ts_model_strategy']
+    Gta\DataExportBundle\Planning\Model\DateIntervenantHorModel:
+        tags: ['data_export.ts_model_strategy']
+    Gta\DataExportBundle\Planning\Model\IntervenantDateHorModel:
+        tags: ['data_export.ts_model_strategy']
+
+    Gta\DataExportBundle\Formatter\FormatterInterface:
+        public: false
+        alias: gta_data_export.export_formatter
+
+    Gta\DataExportBundle\Formatter\Header\HeaderDateHoraire: ~
+    Gta\DataExportBundle\Expression\Provider\:
+        resource: '../../Expression/Provider/*'
+        tags: [expression.providers]
+    Gta\DataExportBundle\Worksheet\DataWriter\Header\SimpleHeaderWriter: ~
+    Gta\DataExportBundle\Worksheet\DataWriter\Body\SimpleRowBodyWriter: ~
+    Gta\DataExportBundle\Builder\GlobalStyleApplier: ~
+    Gta\DataExportBundle\Builder\PrintConfigApplier: ~

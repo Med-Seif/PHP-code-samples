@@ -1,0 +1,257 @@
+global:
+    print_header: "
+        '&L' ~ codhop ~ ' ' ~ libetb ~
+        '&C' ~ this.getScreenTitle() ~ '\\n' ~ '&11' ~ typtab ~ ' ' ~ ucwords(strtolower(trim(servic))) ~
+        '&R' ~ datdeb ~  ' - '  ~ datfin ~ HeaderIntervenantName(user)"
+    print_footer: "'&L' ~ user ~ '&CPage &P / &N' ~ '&R' ~ date('d/m/Y H:i:s')"
+    fname: ~
+
+col_titles:
+    gta_medical_contrat_list:
+        title: Contrats
+        fname: ~
+        cols:
+            Matricule: matric
+            Intervenant: name
+            Service principal: serviceLabel(service)
+            Type: typcon_lib
+            Objet: objcon_lib
+            Période de validité: { provider: periodeInterval(periode), style: {alignHorizontal: center} }
+            Valeur: { provider: valcon, style: {alignHorizontal: center} }
+    #        page_format: !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::PAGE_SIZE_A4
+    #        orientation: !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::ORIENTATION_LANDSCAPE
+    core_actions_list:
+        title: Actions
+        fname: ~
+        cols:
+            Date: dateff
+            Nom: username
+            Thème: theme
+            Action: action
+            Matricule: matric
+            Intervenant: name
+            Service: serviceLabel(service)
+            Libellé: libelle
+            Période: periodeInterval(periode)
+    gta_medical_fiche_list:
+        title: Fiches
+        fname: ~
+        cols:
+            Matricule: matric
+            Intervenant: name
+            Service principal:
+                provider: serviceLabel(service, true)
+                alias: service
+            Période de validité:
+                provider: periodeInterval(periode)
+                alias: periode
+                style: { alignHorizontal: center }
+            Période: { provider: per_base, style: {width: 10, alignHorizontal: center} }
+            1/2 P: { provider: nbj, style: {width: 8, alignHorizontal: center} }
+            L: { provider: nbdplu, style: {width: 6, alignHorizontal: center} }
+            M: { provider: nbdpma, style: {width: 6, alignHorizontal: center} }
+            M: { provider: nbdpme, style: {width: 6, alignHorizontal: center} }
+            J: { provider: nbdpje, style: {width: 6, alignHorizontal: center} }
+            V: { provider: nbdpve, style: {width: 6, alignHorizontal: center} }
+            S: { provider: nbdpsa, style: {width: 6, alignHorizontal: center} }
+            D: { provider: nbdpdi, style: {width: 6, alignHorizontal: center} }
+            Abs: { provider: absence, style: {width: 8, alignHorizontal: center} }
+            Rému: { provider: rem, style: {width: 8, alignHorizontal: center} }
+            %: { provider: v(pro), style: {width: 6, alignHorizontal: center} }
+    gta_medical_affectation_list:
+        title: Affectations
+        fname: ~
+        cols:
+            Matricule:
+                provider: matric
+            Intervenant:
+                provider: name
+            Service:
+                provider: serviceLabel(service)
+                alias: service
+                style: { alignHorizontal: left, width: 25 }
+            Période de validité:
+                provider: periodeInterval(periode)
+                alias: periode
+                style: { alignHorizontal: center }
+            Astreinte:
+                provider: YesOrNoMark(scppas)
+                alias: scppas
+                style: { alignHorizontal: center, width: 12 }
+            Mensuel:
+                provider: YesOrNoMark(scpppm)
+                alias: scpppm
+                style: { alignHorizontal: center, width: 12 }
+            Ce service:
+                provider: YesOrNoMark(scppri)
+                alias: scppri
+                style: { alignHorizontal: center, width: 12 }
+            Autres:
+                provider: YesOrNoMark(autre)
+                alias: autre
+                style: { alignHorizontal: center, width: 12 }
+            Cohérence:
+                provider: ~
+                alias: coher
+                style: { alignHorizontal: center, width: 12 }
+    gta_core_droit_conge:
+        title: Droit-Congés
+        fname: ~
+        cols:
+            Matricule: matric
+            Intervenant: name
+            Catégorie des congés: category
+            Position - Motif: position ~ ' - ' ~ motif
+            Droit en jours:
+                provider: droit_jour
+                style: { alignHorizontal: center }
+            Période de validité: periodeInterval(periode)
+            Congés posés:
+                provider: conge_pose
+                style: { alignHorizontal: center }
+            Mvts CET:
+                provider: "droit_cet ?: ''"
+                style: { alignHorizontal: center }
+            Reliquat:
+                provider: reliquat
+                style: { alignHorizontal: center }
+    gta_medical_searchintervenant_list:
+        title: Intervenants
+        fname: ~
+        cols:
+            Matricule: matric
+            Intervenant: name
+            Entrée/Sortie: esmod
+            Service principal: serviceLabel(service)
+            Statut: statut_lib
+            Unité fonctionnelle: tuflibs
+    gta_medical_deplacement_list:
+        title: Déplacements
+        fname: ~
+        cols:
+            Date:
+                provider: opt('dateff')
+                alias: dateff
+            Matricule:
+                provider: opt('matric')
+                alias: matric
+            Intervenant:
+                provider: opt('name')
+                alias: name
+            Service:
+                provider: serviceLabel(opt('service'))
+                alias: service
+            Horaire:
+                provider: reverseHoraire(opt('hor'))
+                alias: hor
+            Activité:
+                provider: opt('actlib')
+                alias: actlib
+            -3h:
+                provider: opt('moins3h')
+                alias: -3h
+            +3h:
+                provider: opt('plus3h')
+                alias: +3h
+            Début:
+                provider: opt('hdeb')
+                alias: hdeb
+            Fin:
+                provider: opt('hfin')
+                alias: hfin
+            Durée:
+                provider: opt('dur')
+                alias: dur
+            Commentaire:
+                provider: opt('depcom')
+                alias: depcom
+            Valorisé:
+                provider: v(opt('valo'))
+                alias: valo
+                style: { fontColor: !php/const:Gta\DataExportBundle\StyleSheet\Colors::GREEN, alignHorizontal: center}
+    gta_medical_conge_detail:
+        title: Droits-congés
+        fname: ~
+        cols:
+            Période de validité: periodeInterval(periode)
+            Catégorie de congés: typpers
+            Position-Motif: posmot
+            Type: horaire
+            Nombre de jours:
+                provider: jours
+                function: SUM
+                style: { alignHorizontal: center}
+        margin_top: '1'
+        orientation: portrait
+    gta_medical_statistique_detail:
+        title: Activités
+        fname: ~
+        cols:
+            Jours: date_short_name ~ ' ' ~ date_type
+            Date: plsdate
+            Horaire: plshor
+            Service: serviceLabel(service)
+            Activité: actlib
+            Type Act: acttyp_lib
+            Rému: type_rem
+            Période: pltyjr
+
+    gta_medical_activite_listall:
+        title: ['Liste des activités générales', 'Liste des activités médicales']
+        cols:
+            - { Activité: cod, Libellé: lib, "Type d'activité": type_lib, "Type période": hor, "Période de validité": periodeInterval(periode), 'Lien congé': cgpos_lib, Actif: { provider: lien_srv, style: {width: 8, alignHorizontal: center } } }
+            - { Activité: cod, Libellé: lib, "Type d'activité": type_lib, "Type période": hor, "Période de validité": periodeInterval(periode) }
+
+    medical_controls_list:
+        title: Contrôles
+        fname: ~
+        cols:
+            Matric: matric
+            Intervenant: name
+            Date: dateff
+            Horaire: reverseHoraire(opt('typhor'))
+            Alerte: erreur
+            Mise à jour: datmaj
+            Util: utimaj
+
+    gta_core_action_list:
+        title: Actions
+        fname: ~
+        cols:
+            Date: dateff
+            Nom uilisateur: username
+            Thème: theme
+            Action: action
+            Matricule: matric
+            Intervenant: name
+            Service: serviceLabel(service)
+            Libellé: libelle
+            Période: periodeInterval(periode)
+
+    gta_medical_statistique_detailplanning:
+        title: Activités
+        fname: ~
+        cols:
+            Jours: date_short_name
+            Date: dateff
+            Horaire: reverseHoraire(opt('hor'))
+            Service: serviceLabel(service)
+            Activité: actlib
+            Type Act: acttyp_lib
+            Rému: type_rem
+            Période: pltyjr
+    gta_medical_control_list:
+        title: Contrôles
+        fname: ~
+        cols:
+            Matric:
+                provider: matric
+                style: { alignHorizontal: center, width: 12 }
+            Intervenant: name
+            Date: dateff
+            Horaire:
+                provider: typhor
+                style: { alignHorizontal: center }
+            Alerte: erreur
+            Mise à jour: datmaj
+            Util: utimaj

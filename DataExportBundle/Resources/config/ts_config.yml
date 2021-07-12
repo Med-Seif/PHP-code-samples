@@ -1,0 +1,130 @@
+options:
+    common:
+        header:
+            colStart: 2
+            rowStart: 1
+            rows: 1 # number of rows in header
+            width: 6 # to manage width header cells and therfore body cells
+            height: 15 # height of two date rows
+            firstColWidth: 25 # width of left col
+            firstColIndex: 'A'
+            freeze: ~
+            style:
+                font:
+                    size: 7
+                    name: 'Arial'
+                alignment:
+                    horizontal: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+                    vertical: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                    wrapText: false
+        body:
+            leftside:
+                first_row_font_size: 8
+                second_row_font_size: 6
+                colStart: 1
+                rowStart: 3
+                width: 18
+                style:
+                    font:
+                        name: 'Arial'
+                        size: 8 # this option is obsolete since Mosta is using RichText inside left column, but can be useful only of multi left side columns
+                    alignment:
+                        horizontal: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_GENERAL
+                        vertical: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                        wrapText: true
+
+            body:
+                cell_activity_height: 20 # manage body and left cells height with these two options
+                cell_indicator_height: 7
+                cell_couverture_font_size: 7
+                cell_code_font_size: 7
+                cell_remuneration_font_size: 7
+                cell_show_activite: true
+                cell_show_remuneration: true
+                cell_show_indicateurs: true
+                cell_show_couverture: true
+                colStart: 2
+                rowStart: 3
+                freeze: ~
+                style:
+                    font:
+                        size: 8
+                    alignment:
+                        horizontal: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_DISTRIBUTED
+                        vertical: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                        wrapText: true
+    date_horaire_intervenant_model:
+        header:
+            width: 7
+            freeze: 2 # begin from top
+            rows: 2
+        body:
+            body:
+                freeze: 1 # begin from left
+    intervenant_date_horaire_model:
+        header:
+            freeze: 2 # begin from top
+            colStart: 3
+            rows: 1
+            height: 60
+            width: 30
+        body:
+            body:
+                freeze: ~
+    date_intervenant_horaire_model:
+        header:
+            width: 8
+            rowStart: 1
+            rows: 1
+            height: 30
+            style:
+                alignment:
+                    wrapText: true
+        body:
+            leftside:
+                rowStart: 2
+                width: 10
+                style:
+                    alignment:
+                        horizontal: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_GENERAL
+                        vertical: !php/const:PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                        wrapText: true
+            body:
+                rowStart: 2
+                colStart: 3
+print:
+    common:
+        calls:
+            # usage of setHeader and setFooter is deprecated, convert to allHeader and allFooter
+            allHeader: "
+            '&L' ~ codhop ~ ' ' ~ libetb ~
+            '&C' ~ 'Tableau de service collectif' ~ '\\n' ~ '&11'  ~ ' ' ~
+            strtoupper(trim(typtab)) ~ ' ' ~ strtoupper(trim(servic)) ~ ' ' ~ strtoupper(trim(sertyp)) ~ ' ' ~ strtoupper(trim(serlib)) ~
+            '&R' ~ datdeb ~  ' - '  ~ datfin"
+            allFooter: "'&L' ~ user ~ '&CPage &P / &N' ~ '&R' ~ date('d/m/Y H:i:s')"
+            marginTop: 0.6
+            marginBottom: 0.5
+            marginLeft: 0
+            marginRight: 0
+            orientation: !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::ORIENTATION_LANDSCAPE
+            printScale: 56
+            repeatRow: [1,2]
+            repeatCol: [1,1]
+            paperSizeIndex: !php/const:Gta\DataExportBundle\Adapters\ExportAdapterInterface::PAGE_SIZE_A4
+            #fitHeight: 0
+            #fitWidth: 1
+        options:
+            a3_nmb_cols_per_page: 10
+            a4_nmb_cols_per_page: 11
+
+    date_horaire_intervenant_model:
+        options:
+            a3_nmb_cols_per_page: 10
+            a4_nmb_cols_per_page: 11
+    intervenant_date_horaire_model: ~
+    date_intervenant_horaire_model:
+        calls:
+            printScale: 55
+        options:
+            a3_nmb_cols_per_page: 10
+            a4_nmb_cols_per_page: 31

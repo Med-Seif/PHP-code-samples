@@ -1,0 +1,10 @@
+header:
+    fontSize: 12
+    fontBold: true
+    fontColor: FFFFFF00
+    bgColor: FF000000
+body:
+    fontSize: 10
+    fontBold: false
+    fontColor: FFFFFFFF
+    bgColor: FF000000

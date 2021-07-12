@@ -1,0 +1,6 @@
+colors:
+    - &black '000000'
+    - &white 'FFFFFF'
+    - &gray 'b2b2b2'
+    - &lightgray 'E2E2E2'
+    - &darkgray '939393'

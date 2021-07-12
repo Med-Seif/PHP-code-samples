@@ -1,0 +1,10 @@
+gta_data_export_controllers:
+    resource: '@GtaDataExportBundle/Controller'
+    type:     annotation
+    prefix:   /export
+
+#gta_data_export_homepage:
+#    resource: '@GtaDataExportBundle/Controller/DefaultController.php'
+#    type:     annotation
+
+
