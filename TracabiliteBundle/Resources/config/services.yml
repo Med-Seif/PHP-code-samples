@@ -1,0 +1,82 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+    _instanceof:
+        Gta\CoreBundle\DataBase\DbConnectionAwareInterface:
+            tags: [has_db_connection]
+# controllers
+    Gta\TracabiliteBundle\Controller\:
+        resource: '../../Controller/*'
+
+# Event listeners
+    Gta\TracabiliteBundle\Event\Listener\ApiJournalListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
+            - { name: monolog.logger, channel: api_invoke }
+        arguments:
+            - '@logger'
+
+    Gta\TracabiliteBundle\Event\Listener\EgmhistListener:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, event: db.crud, method: onCrud }
+            - { name: monolog.logger, channel: database } # for "tracabilté" itself
+            - { name: is_logger, channel: tracabilite } # for tracing "tracabilité"
+# Serializers
+    tracabilite.db_egmhist_log_object_serializer:
+        class: Gta\TracabiliteBundle\Serializer\DbEgmhistLogObject\Serializer
+        tags: [serializer.normalizer]
+
+    tracabilite.db_egmhist_log_object_collection_serializer:
+        class: Gta\TracabiliteBundle\Serializer\DbEgmhistLogObject\CollectionSerializer
+        arguments:
+            - '@tracabilite.db_egmhist_log_object_serializer'
+        tags: [serializer.normalizer]
+# Formatters
+    tracabilite.egmhist.monolog.formatter:
+        class: 'Gta\TracabiliteBundle\Log\Formatter\EgmhistLogFormatter'
+        tags:
+            - { name: is_logger, channel: tracabilite }
+
+    tracabilite.api_journal.monolog.formatter:
+        class: 'Gta\TracabiliteBundle\Log\Formatter\ApiJournalLogFormatter'
+
+# Log handlers
+    tracabilite.egmhist.monolog.handler:
+        class: 'Gta\TracabiliteBundle\Log\Handler\EgmhistLogHandler'
+        tags :
+            - { name: is_logger, channel: tracabilite }
+        calls:
+            - [setFormatter, [ '@tracabilite.egmhist.monolog.formatter']]
+            - [pushProcessors, [
+                [
+                  '@core.monolog.user_token.processor',
+                  '@core.monolog.http_request.processor'
+                ]]]
+
+    tracabilite.api_journal.monolog.handler:
+        class: 'Gta\TracabiliteBundle\Log\Handler\ApiJournalLogHandler'
+        calls:
+            - [setFormatter, ['@tracabilite.api_journal.monolog.formatter']]
+            - [pushProcessors, [
+                [
+                  '@core.monolog.user_token.processor',
+                  '@core.monolog.appcod.processor',
+                  '@core.monolog.app_version.processor'
+                ]]]
+# formatting strategies
+    Gta\TracabiliteBundle\Formatter\Strategy\:
+        resource: '../../Formatter/Strategy/*'
+        tags: ['tracabilite.formatter_strategy']
+# Tracabilite services
+    Gta\TracabiliteBundle\Manager\TracabiliteManager:
+        tags:
+            - { name: core.is_event_dispacher }
+            - { name: is_logger, channel: tracabilite }
+
+    Gta\TracabiliteBundle\Expression\Provider\:
+        resource: '../../Expression/Provider/*'
+        tags: [expression.providers]

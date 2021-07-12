@@ -1,0 +1,3 @@
+gta_tracabilite_homepage:
+    resource: '@GtaTracabiliteBundle/Controller/DefaultController.php'
+    type:     annotation
